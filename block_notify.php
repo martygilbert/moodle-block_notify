@@ -17,17 +17,17 @@
 /**
  * Newblock block caps.
  *
- * @package    block_newblock
+ * @package    block_notify
  * @copyright  Daniel Neis <danielneis@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-class block_newblock extends block_base {
+class block_notify extends block_base {
 
     function init() {
-        $this->title = get_string('pluginname', 'block_newblock');
+        $this->title = get_string('pluginname', 'block_notify');
     }
 
     function get_content() {

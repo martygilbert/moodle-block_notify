@@ -16,9 +16,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_newblock', language 'en'
+ * Strings for component 'block_notify', language 'en'
  *
- * @package   block_newblock
+ * @package   block_notify
  * @copyright Daniel Neis <danielneis@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,6 +28,6 @@ $string['descconfig'] = 'Description of the config section';
 $string['descfoo'] = 'Config description';
 $string['headerconfig'] = 'Config section header';
 $string['labelfoo'] = 'Config label';
-$string['newblock:addinstance'] = 'Add a newblock block';
-$string['newblock:myaddinstance'] = 'Add a newblock block to my moodle';
-$string['pluginname'] = 'Newblock';
+$string['notify:addinstance'] = 'Add a notify block';
+$string['notify:myaddinstance'] = 'Add a notify block to my moodle';
+$string['pluginname'] = 'Notify';
