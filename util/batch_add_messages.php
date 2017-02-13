@@ -18,7 +18,7 @@ require_once('../../../config.php');
 global $CFG, $USER;
 
 
-if(($handle = fopen("/home/marty/Dropbox/messages.csv", "r")) !== FALSE){
+if(($handle = fopen("/tmp/messages.csv", "r")) !== FALSE){
 
     while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
         $notify = new stdClass();
@@ -36,13 +36,13 @@ if(($handle = fopen("/home/marty/Dropbox/messages.csv", "r")) !== FALSE){
         }
 
         if($notify->username == "#N/A"){
-            error_log('No record for user with username: '.$notify->username."\n");
+            echo('No record for user with username: '.$notify->username."\n");
             continue;
         }
 
         $user  = $DB->get_record('user', array('username'=>$notify->username));
         if(!$user){
-            error_log('No record for user with username: '.$notify->username."\n");
+            echo('No record for user with username: '.$notify->username."\n");
             continue;
         }
 
@@ -50,7 +50,7 @@ if(($handle = fopen("/home/marty/Dropbox/messages.csv", "r")) !== FALSE){
 
         $result = $DB->insert_record('block_notify', $notify, true, true); //returnid, bulk
         if(!$result){
-            error_log('Zero returned for id inserting '.$notify->username."\n");
+            echo('Zero returned for id inserting '.$notify->username."\n");
             continue;
         }
     }
