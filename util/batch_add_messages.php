@@ -30,6 +30,11 @@ if(($handle = fopen("/home/marty/Dropbox/messages.csv", "r")) !== FALSE){
         $notify->end        = $data[4];
         $notify->message    = $data[5];
 
+        if(strlen($notify->title) > 50){
+            echo "Title too long. Skipping\n";
+            continue;
+        }
+
         if($notify->username == "#N/A"){
             error_log('No record for user with username: '.$notify->username."\n");
             continue;
