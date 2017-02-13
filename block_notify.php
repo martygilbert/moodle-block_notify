@@ -31,7 +31,7 @@ class block_notify extends block_base {
     }
 
     function get_content() {
-        global $CFG, $OUTPUT;
+        global $CFG, $OUTPUT, $USER, $COURSE, $DB;
 
         if ($this->content !== null) {
             return $this->content;
@@ -42,29 +42,49 @@ class block_notify extends block_base {
             return $this->content;
         }
 
+        //error_log($USER->id."\t".$COURSE->id);
+
         $this->content = new stdClass();
         $this->content->items = array();
         $this->content->icons = array();
         $this->content->footer = '';
 
         // user/index.php expect course context, so get one if page has module context.
-        $currentcontext = $this->page->context->get_course_context(false);
+        //$currentcontext = $this->page->context->get_course_context(false);
 
+        /*
         if (! empty($this->config->text)) {
             $this->content->text = $this->config->text;
         }
+        */
 
+        /*
         $this->content = '';
         if (empty($currentcontext)) {
             return $this->content;
         }
+        */
+        /*
         if ($this->page->course->id == SITEID) {
             $this->content->text .= "site context";
         }
+        */
 
+        /*
         if (! empty($this->config->text)) {
             $this->content->text .= $this->config->text;
         }
+        */
+
+        $msg = $DB->get_record('block_notify', array('mdluserid'=>$USER->id, 'courseid'=>$COURSE->id));
+        //error_log(print_r($msg, true));
+        if(!$msg) return;
+
+        $now = time();
+        if($now > $msg->end || $now < $msg->start) return;
+
+        $this->title = $msg->title;
+        $this->content->text = $msg->message;
 
         return $this->content;
     }
@@ -74,23 +94,21 @@ class block_notify extends block_base {
         return array('all' => false,
                      'site' => true,
                      'site-index' => true,
-                     'course-view' => true, 
+                     'course-view' => false, 
                      'course-view-social' => false,
-                     'mod' => true, 
+                     'mod' => false, 
                      'mod-quiz' => false);
     }
 
     public function instance_allow_multiple() {
-          return true;
+          return false;
     }
 
     function has_config() {return true;}
 
     public function cron() {
             mtrace( "Hey, my cron script is running" );
-             
-                 // do something
-                  
-                      return true;
+            // do something
+            return true;
     }
 }
