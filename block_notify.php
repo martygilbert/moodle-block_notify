@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 class block_notify extends block_base {
 
     function init() {
-        $this->title = get_string('pluginname', 'block_notify');
+        //$this->title = get_string('pluginname', 'block_notify');
     }
 
     function get_content() {
@@ -49,43 +49,31 @@ class block_notify extends block_base {
         $this->content->icons = array();
         $this->content->footer = '';
 
-        // user/index.php expect course context, so get one if page has module context.
-        //$currentcontext = $this->page->context->get_course_context(false);
 
-        /*
-        if (! empty($this->config->text)) {
-            $this->content->text = $this->config->text;
-        }
-        */
-
-        /*
-        $this->content = '';
-        if (empty($currentcontext)) {
-            return $this->content;
-        }
-        */
-        /*
-        if ($this->page->course->id == SITEID) {
-            $this->content->text .= "site context";
-        }
-        */
-
-        /*
-        if (! empty($this->config->text)) {
-            $this->content->text .= $this->config->text;
-        }
-        */
-
-        $msg = $DB->get_record('block_notify', array('mdluserid'=>$USER->id, 'courseid'=>$COURSE->id));
-        //error_log(print_r($msg, true));
-        if(!$msg) return;
+        $messages = $DB->get_records('block_notify', array('mdluserid'=>$USER->id, 'courseid'=>$COURSE->id));
+        
+        if(!$messages) return;
 
         $now = time();
-        if($now > $msg->end || $now < $msg->start) return;
+        $numMessages = 0;
+        $this->content->text = ' ';
+        foreach ($messages as $msg) {
 
-        $this->title = $msg->title;
-        $this->content->text = $msg->message;
+            if($now > $msg->end || $now < $msg->start) continue;
 
+            $numMessages++;
+            $this->content->text .= '<h2>'.$msg->title.'</h2>'."\n";
+            $this->content->text .= $msg->message;
+            $this->content->text .= "\n".'<hr style="border-top: 3px double" />';
+        }
+
+        if($numMessages == 0) {
+            $this->content->text = '';
+            return;
+        }
+        
+        //strip the last line
+        $this->content->text = substr($this->content->text, 0, strrpos($this->content->text, "\n"));
         return $this->content;
     }
 
@@ -105,6 +93,11 @@ class block_notify extends block_base {
     }
 
     function has_config() {return true;}
+
+    function instance_delete() {
+        global $DB;
+        $DB->delete_records('block_notify', array('courseid'=>1));
+    }
 
     public function cron() {
             mtrace( "Hey, my cron script is running" );
