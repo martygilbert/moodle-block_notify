@@ -17,7 +17,7 @@ require_once('../../../config.php');
 */
 global $CFG, $USER;
 
-
+$numAdded = 0;
 if(($handle = fopen("/tmp/messages.csv", "r")) !== FALSE){
 
     while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
@@ -53,6 +53,7 @@ if(($handle = fopen("/tmp/messages.csv", "r")) !== FALSE){
             echo('Zero returned for id inserting '.$notify->username."\n");
             continue;
         }
+		$numAdded++;
     }
 
     fclose($handle);
@@ -61,3 +62,4 @@ if(($handle = fopen("/tmp/messages.csv", "r")) !== FALSE){
     echo ("Error opening file\n");
 }
 
+echo "Added $numAdded messages\n";
