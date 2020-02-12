@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Block Notify
  *
- * @package    block_widget
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @package    block_notify
+ * @copyright  Marty Gilbert <martygilbert@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2020021201;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2018120300;        // Requires this Moodle version
-$plugin->component = 'block_notify'; // Full name of the plugin (used for diagnostics)
+$plugin->version   = 2020021201;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2018120300;        // Requires this Moodle version.
+$plugin->component = 'block_notify';    // Full name of the plugin (used for diagnostics).
