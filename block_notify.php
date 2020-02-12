@@ -18,7 +18,7 @@
  * Block Notify
  *
  * @package    block_notify
- * @copyright  Daniel Neis <danielneis@gmail.com>
+ * @copyright  Marty Gilbert <martygilbert@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -81,7 +81,6 @@ class block_notify extends block_base {
         return $this->content;
     }
 
-    // my moodle can only have SITEID and it's redundant here, so take it away
     public function applicable_formats() {
         return array('all' => false,
                      'site' => true,
@@ -108,4 +107,8 @@ class block_notify extends block_base {
             // do something
             return true;
     }
+
+	function _self_test() {
+		return true;
+	}
 }
