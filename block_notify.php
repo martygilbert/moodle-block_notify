@@ -28,7 +28,7 @@ class block_notify extends block_base {
 
     function init() {
         //$this->title = get_string('pluginname', 'block_notify');
-        //$this->title = get_string('blockdispname', 'block_notify');
+        $this->title = get_string('blockdispname', 'block_notify');
     }
 
     function get_content() {
