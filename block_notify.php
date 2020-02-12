@@ -26,14 +26,12 @@ defined('MOODLE_INTERNAL') || die();
 
 class block_notify extends block_base {
 
-    function init() {
-        //$this->title = get_string('pluginname', 'block_notify');
+    public function init() {
         $this->title = get_string('blockdispname', 'block_notify');
     }
 
-    function get_content() {
+    public function get_content() {
         global $CFG, $OUTPUT, $USER, $COURSE, $DB, $PAGE;
-
 
         if ($this->content !== null) {
             return $this->content;
@@ -44,40 +42,39 @@ class block_notify extends block_base {
             return $this->content;
         }
 
-        //error_log($USER->id."\t".$COURSE->id);
-
         $this->content = new stdClass();
         $this->content->items = array();
         $this->content->icons = array();
         $this->content->footer = '';
 
+        $messages = $DB->get_records('block_notify', array('mdluserid' => $USER->id, 'courseid' => $COURSE->id));
 
-        $messages = $DB->get_records('block_notify', array('mdluserid'=>$USER->id, 'courseid'=>$COURSE->id));
-        
-        if(!$messages) return;
+        if (!$messages) {
+            return;
+        }
 
         $now = time();
-        $numMessages = 0;
+        $nummessages = 0;
         $this->content->text = ' ';
-		$message = '';
+        $message = '';
 
         foreach ($messages as $msg) {
 
-            if($now > $msg->end || $now < $msg->start) continue;
+            if ($now > $msg->end || $now < $msg->start) {
+                continue;
+            }
 
-            $numMessages++;
+            $nummessages++;
             $this->content->text .= '<h3>'.$msg->title.'</h3>'."\n";
             $this->content->text .= $msg->message;
 
         }
 
-        if($numMessages == 0) {
+        if ($nummessages == 0) {
             $this->content->text = '';
             return;
         }
-        
-        //strip the last line
-        //$this->content->text = substr($this->content->text, 0, strrpos($this->content->text, "\n"));
+
         return $this->content;
     }
 
@@ -85,9 +82,9 @@ class block_notify extends block_base {
         return array('all' => false,
                      'site' => true,
                      'site-index' => true,
-                     'course-view' => false, 
+                     'course-view' => false,
                      'course-view-social' => false,
-                     'mod' => false, 
+                     'mod' => false,
                      'mod-quiz' => false);
     }
 
@@ -95,20 +92,21 @@ class block_notify extends block_base {
           return false;
     }
 
-    function has_config() {return true;}
+    public function has_config() {
+        return true;
+    }
 
-    function instance_delete() {
+    public function instance_delete() {
         global $DB;
-        $DB->delete_records('block_notify', array('courseid'=>1));
+        $DB->delete_records('block_notify', array('courseid' => 1));
     }
 
     public function cron() {
             mtrace( "Hey, my cron script is running" );
-            // do something
             return true;
     }
 
-	function _self_test() {
-		return true;
-	}
+    public function _self_test() {
+        return true;
+    }
 }
