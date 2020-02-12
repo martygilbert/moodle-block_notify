@@ -23,7 +23,6 @@ if ($argc != 2){
 }
 
 $file = $argv[1];
-echo $file."\n";
 
 if (!file_exists($file)){
     echo "File does not exist.\nExiting.\n";
