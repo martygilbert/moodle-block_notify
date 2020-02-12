@@ -12,8 +12,20 @@ require_once('../../../config.php');
 */
 global $CFG, $USER;
 
+if ($argc != 2){
+    echo "Requires filename.\nExiting.\n";
+    exit;
+}
+
+$file = $argv[1];
+
+if (!file_exists($file)){
+    echo "File does not exist.\nExiting.\n";
+    exit;
+}
+
 $numRemoved = 0;
-if(($handle = fopen("/tmp/toRemove.csv", "r")) !== FALSE){
+if(($handle = fopen($file, "r")) !== FALSE){
 
     while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
         $notify = new stdClass();
