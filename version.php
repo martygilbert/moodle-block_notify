@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017021301;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2015111600;        // Requires this Moodle version
+$plugin->version   = 2020021201;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->requires  = 2019052000;        // Requires this Moodle version
 $plugin->component = 'block_notify'; // Full name of the plugin (used for diagnostics)
 $plugin->cron = 300;
