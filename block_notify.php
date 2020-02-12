@@ -28,7 +28,7 @@ class block_notify extends block_base {
 
     function init() {
         //$this->title = get_string('pluginname', 'block_notify');
-        $this->title = get_string('blockdispname', 'block_notify');
+        //$this->title = get_string('blockdispname', 'block_notify');
     }
 
     function get_content() {
@@ -61,63 +61,20 @@ class block_notify extends block_base {
         $this->content->text = ' ';
 		$message = '';
 
-			$this->content->text .=	'
-  <script>
-  var $j = jQuery.noConflict();
-  $j(function() {
-    $j( "#dialog-message" ).dialog({
-      modal: true,
-	  closeOnEscape: false,
-	  draggable: false,
-	  dialogClass: "no-close",
-	  width: 500,
-	  position: { my: "top+10%", at: "top+10%"},
-	  open: function(event, ui) {
-		$j(".ui-dialog-titlebar-close", ui.dialog || ui).hide();
-	  },
-      buttons: [
-	  	{
-		text: "Ok",
-		icon: "ui-icon-heart",
-        click: function() {
-          $j(this).dialog( "close" );
-        }
-		},
-		{
-		text: "Cancel",
-		icon: "ui-icon-array",
-		click: function() {
-			$j(this).dialog("close");
-		}
-		}
-
-      ]
-    });
-  } );
-  </script>
-<div id="dialog-message">';
-
         foreach ($messages as $msg) {
 
             if($now > $msg->end || $now < $msg->start) continue;
 
             $numMessages++;
             $this->content->text .= '<h3>'.$msg->title.'</h3>'."\n";
-            $this->content->text .= '<p>'.$msg->message.'</p>';
+            $this->content->text .= $msg->message;
 
         }
-
-		$this->content->text .= '</div>';
 
         if($numMessages == 0) {
             $this->content->text = '';
             return;
-        } else {
-			$PAGE->requires->jquery();
-			$PAGE->requires->jquery_plugin('ui');
-			$PAGE->requires->jquery_plugin('ui-css');
-			$PAGE->requires->css('/blocks/notify/styling.css');
-		}
+        }
         
         //strip the last line
         //$this->content->text = substr($this->content->text, 0, strrpos($this->content->text, "\n"));
