@@ -31,3 +31,4 @@ $string['labelfoo'] = 'Config label';
 $string['notify:addinstance'] = 'Add a notify block';
 $string['notify:myaddinstance'] = 'Add a notify block to my moodle';
 $string['pluginname'] = 'Notify';
+$string['blockdispname'] = 'Notifications';

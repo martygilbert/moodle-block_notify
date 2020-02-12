@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Newblock block caps.
+ * Block Notify
  *
  * @package    block_notify
- * @copyright  Daniel Neis <danielneis@gmail.com>
+ * @copyright  Marty Gilbert <martygilbert@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,11 +27,13 @@ defined('MOODLE_INTERNAL') || die();
 class block_notify extends block_base {
 
     function init() {
-        $this->title = get_string('pluginname', 'block_notify');
+        //$this->title = get_string('pluginname', 'block_notify');
+        $this->title = get_string('blockdispname', 'block_notify');
     }
 
     function get_content() {
-        global $CFG, $OUTPUT;
+        global $CFG, $OUTPUT, $USER, $COURSE, $DB, $PAGE;
+
 
         if ($this->content !== null) {
             return $this->content;
@@ -42,55 +44,71 @@ class block_notify extends block_base {
             return $this->content;
         }
 
+        //error_log($USER->id."\t".$COURSE->id);
+
         $this->content = new stdClass();
         $this->content->items = array();
         $this->content->icons = array();
         $this->content->footer = '';
 
-        // user/index.php expect course context, so get one if page has module context.
-        $currentcontext = $this->page->context->get_course_context(false);
 
-        if (! empty($this->config->text)) {
-            $this->content->text = $this->config->text;
+        $messages = $DB->get_records('block_notify', array('mdluserid'=>$USER->id, 'courseid'=>$COURSE->id));
+        
+        if(!$messages) return;
+
+        $now = time();
+        $numMessages = 0;
+        $this->content->text = ' ';
+		$message = '';
+
+        foreach ($messages as $msg) {
+
+            if($now > $msg->end || $now < $msg->start) continue;
+
+            $numMessages++;
+            $this->content->text .= '<h3>'.$msg->title.'</h3>'."\n";
+            $this->content->text .= $msg->message;
+
         }
 
-        $this->content = '';
-        if (empty($currentcontext)) {
-            return $this->content;
+        if($numMessages == 0) {
+            $this->content->text = '';
+            return;
         }
-        if ($this->page->course->id == SITEID) {
-            $this->content->text .= "site context";
-        }
-
-        if (! empty($this->config->text)) {
-            $this->content->text .= $this->config->text;
-        }
-
+        
+        //strip the last line
+        //$this->content->text = substr($this->content->text, 0, strrpos($this->content->text, "\n"));
         return $this->content;
     }
 
-    // my moodle can only have SITEID and it's redundant here, so take it away
     public function applicable_formats() {
         return array('all' => false,
                      'site' => true,
                      'site-index' => true,
-                     'course-view' => true, 
+                     'course-view' => false, 
                      'course-view-social' => false,
-                     'mod' => true, 
+                     'mod' => false, 
                      'mod-quiz' => false);
     }
 
     public function instance_allow_multiple() {
-          return true;
+          return false;
     }
 
     function has_config() {return true;}
 
+    function instance_delete() {
+        global $DB;
+        $DB->delete_records('block_notify', array('courseid'=>1));
+    }
+
     public function cron() {
             mtrace( "Hey, my cron script is running" );
-             
-                 // do something
-                  
-                      return true;
+            // do something
+            return true;
     }
+
+	function _self_test() {
+		return true;
+	}
 }
