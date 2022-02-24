@@ -57,12 +57,11 @@ if (($handle = fopen($file, "r")) !== false) {
             continue;
         }
 
-        $result = $DB->delete_records('block_notify', array('mdluserid' => $user->id));
-        if (!$result) {
-            echo('False returned for delete messages for '.$notify->email."\n");
-            continue;
+        $num = $DB->count_records('block_notify', array('mdluserid' => $user->id));
+        if ($num > 0) {
+            $DB->delete_records('block_notify', array('mdluserid' => $user->id));
+            $numremoved += $num;
         }
-        $numremoved++;
     }
 
     fclose($handle);
